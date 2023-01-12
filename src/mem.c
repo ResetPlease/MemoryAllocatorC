@@ -39,7 +39,10 @@ static void* map_pages(void const* addr, size_t length, int additional_flags) {
 
 /*  аллоцировать регион памяти и инициализировать его блоком */
 static struct region alloc_region  ( void const * addr, size_t query ) {
-  /*  ??? */
+  struct region custom_region;
+  custom_region.addr = map_pages(addr, query, MAP_EXECUTABLE);
+  custom_region.size = query;
+  return custom_region;
 }
 
 static void* block_after( struct block_header const* block )         ;
@@ -59,16 +62,18 @@ static bool block_splittable( struct block_header* restrict block, size_t query)
   return block-> is_free && query + offsetof( struct block_header, contents ) + BLOCK_MIN_CAPACITY <= block->capacity.bytes;
 }
 
+/*разделение блока, если он слишком большой */
 static bool split_if_too_big( struct block_header* block, size_t query ) {
   /*  ??? */
 }
 
 
 /*  --- Слияние соседних свободных блоков --- */
-
 static void* block_after( struct block_header const* block )              {
   return  (void*) (block->contents + block->capacity.bytes);
 }
+
+// array | 1 2 3 4 5 6 7 | .
 static bool blocks_continuous (
                                struct block_header const* fst,
                                struct block_header const* snd ) {
@@ -99,7 +104,7 @@ static struct block_search_result find_good_or_last  ( struct block_header* rest
 /*  Попробовать выделить память в куче начиная с блока `block` не пытаясь расширить кучу
  Можно переиспользовать как только кучу расширили. */
 static struct block_search_result try_memalloc_existing ( size_t query, struct block_header* block ) {
-  
+ /* */
 }
 
 

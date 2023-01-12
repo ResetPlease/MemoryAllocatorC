@@ -12,6 +12,7 @@ static const struct region REGION_INVALID = {0};
 
 inline bool region_is_invalid( const struct region* r ) { return r->addr == NULL; }
 
+
 typedef struct { size_t bytes; } block_capacity;
 typedef struct { size_t bytes; } block_size;
 
